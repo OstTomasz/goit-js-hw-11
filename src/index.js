@@ -38,7 +38,7 @@ searchForm.addEventListener('submit', e => {
     picturesList.innerHTML = pictures
       .map(picture => {
         return `<li class="pictures-element">
-            <img class="pictures-element_pic" src=${picture.webformatURL} alt=${picture.tags}>
+            <img class="pictures-element_pic" src=${picture.webformatURL} alt=${picture.tags} loading="lazy" />
           <div class="pictures-element_pic-description">
           <div class = "pictures-element_pic-description-element"><p class="pictures-element_pic-description-element_header">Likes</p><p class="pictures-element_value">${picture.likes}</p></div>
           <div class = "pictures-element_pic-description-element"><p class="pictures-element_pic-description-element_header">Views</p><p class="pictures-element_value">${picture.views}</p></div>
@@ -50,3 +50,13 @@ searchForm.addEventListener('submit', e => {
       .join('');
   });
 });
+
+const { height: cardHeight } =
+  picturesList.firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: 'smooth',
+});
+
+// ADD PAGINATION picturesList.addEventListener('scroll', e => {});
