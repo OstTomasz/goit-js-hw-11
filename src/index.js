@@ -12,8 +12,8 @@ searchForm.addEventListener('submit', e => {
   const APIURL = `https://pixabay.com/api/`;
   const params = new URLSearchParams({
     key: '35169635-92091552d9eccdba3eb57d7a9',
-    q: 'dog in the fog',
-    // q: searchString,
+    // q: 'dog in the fog',
+    q: searchString,
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: 'true',
@@ -30,6 +30,11 @@ searchForm.addEventListener('submit', e => {
 
   fetchPictures().then(pictures => {
     console.log(pictures);
+    if (pictures.length === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    }
     picturesList.innerHTML = pictures
       .map(picture => {
         return `<li class="pictures-element">
