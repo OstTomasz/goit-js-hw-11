@@ -1,5 +1,10 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import './sass/index.scss';
+// Opisany w dokumentacji
+import SimpleLightbox from 'simplelightbox';
+// Dodatkowy import stylów
+import 'simplelightbox/dist/simple-lightbox.min.css';
+// Add imports above this line
 
 const searchForm = document.querySelector('.search-form');
 let searchFormInput = document.querySelector(`input[name="searchQuery"]`);
@@ -10,8 +15,9 @@ let listMarkup = '';
 let page = 1;
 
 searchForm.addEventListener('submit', e => {
-  page = 1;
   e.preventDefault();
+  page = 1;
+
   searchString = searchFormInput.value;
   const APIURL = `https://pixabay.com/api/`;
   const params = new URLSearchParams({
@@ -49,7 +55,7 @@ searchForm.addEventListener('submit', e => {
         listMarkup = pictures
           .map(picture => {
             return `<li class="pictures-element">
-            <img class="pictures-element_pic" src=${picture.webformatURL} alt=${picture.tags} loading="lazy" />
+            <a href= "${picture.largeImageURL}"><img class="pictures-element_pic" src=${picture.webformatURL} alt=${picture.tags} loading="lazy" /></a>
           <div class="pictures-element_pic-description">
           <div class = "pictures-element_pic-description-element"><p class="pictures-element_pic-description-element_header">Likes</p><p class="pictures-element_value">${picture.likes}</p></div>
           <div class = "pictures-element_pic-description-element"><p class="pictures-element_pic-description-element_header">Views</p><p class="pictures-element_value">${picture.views}</p></div>
@@ -60,6 +66,14 @@ searchForm.addEventListener('submit', e => {
           })
           .join('');
         picturesList.innerHTML = listMarkup;
+        let lightbox = new SimpleLightbox('.pictures a', {
+          captionsData: 'alt',
+          captionDelay: 250,
+          animationSpeed: 250,
+          fadeSpeed: 250,
+          scrollZoom: false,
+          showCounter: false,
+        });
       })
       .finally(() => {
         if (picturesList.innerHTML !== '') {
@@ -69,13 +83,12 @@ searchForm.addEventListener('submit', e => {
 
     loadMore.addEventListener('click', () => {
       page = page + 1;
-      loadMore.style.visibility = 'hidden';
       fetchPictures(page)
         .then(pictures => {
           listMarkup = pictures
             .map(picture => {
               return `<li class="pictures-element">
-            <img class="pictures-element_pic" src=${picture.webformatURL} alt=${picture.tags} loading="lazy" />
+          <a href= "${picture.largeImageURL}"><img class="pictures-element_pic" src=${picture.webformatURL} alt=${picture.tags} loading="lazy" /></a>
           <div class="pictures-element_pic-description">
           <div class = "pictures-element_pic-description-element"><p class="pictures-element_pic-description-element_header">Likes</p><p class="pictures-element_value">${picture.likes}</p></div>
           <div class = "pictures-element_pic-description-element"><p class="pictures-element_pic-description-element_header">Views</p><p class="pictures-element_value">${picture.views}</p></div>
@@ -86,6 +99,14 @@ searchForm.addEventListener('submit', e => {
             })
             .join('');
           picturesList.insertAdjacentHTML('beforeend', listMarkup);
+          let lightbox = new SimpleLightbox('.pictures a', {
+            captionsData: 'alt',
+            captionDelay: 250,
+            animationSpeed: 250,
+            fadeSpeed: 250,
+            scrollZoom: false,
+            showCounter: false,
+          });
         })
         .then(() => {
           loadMore.style.visibility = 'visible';
@@ -99,7 +120,14 @@ searchForm.addEventListener('submit', e => {
     });
   }
 });
-
+SimpleLightbox('.pictures a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+  animationSpeed: 250,
+  fadeSpeed: 250,
+  scrollZoom: false,
+  showCounter: false,
+});
 // const { height: cardHeight } =
 //   picturesList.firstElementChild.getBoundingClientRect();
 
