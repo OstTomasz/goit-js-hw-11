@@ -1,5 +1,6 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import simpleLightbox from 'simplelightbox';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -23,6 +24,10 @@ const createGalEl = ({
   comments,
   downloads,
 }) => {
+  const elemLink = element('a', {
+    className: 'lightbox-link',
+    href: largeImageURL,
+  });
   const galEl = element('li', { className: 'result' });
 
   const img = element('img', {
@@ -30,7 +35,6 @@ const createGalEl = ({
     src: webformatURL,
     alt: tags,
   });
-  img.dataset.source = largeImageURL;
 
   const description = element('div', { className: 'result-desc' });
 
@@ -84,7 +88,8 @@ const createGalEl = ({
 
   description.append(likesEl, viewsEl, comEl, downloadEl);
 
-  galEl.append(img, description);
+  elemLink.append(img);
+  galEl.append(elemLink, description);
 
   return galEl;
 };
@@ -97,8 +102,11 @@ const renderElements = (images, rootList) => {
 };
 
 form.addEventListener('submit', e => {
-  gallery.innerHTML = '';
   e.preventDefault();
+  gallery.innerHTML = '';
+  if (gallery.innerHTML !== '') {
+    simpleLightbox.refresh();
+  }
   searchString = input.value;
   const params = new URLSearchParams({
     key: '35169635-92091552d9eccdba3eb57d7a9',
@@ -131,7 +139,14 @@ form.addEventListener('submit', e => {
       })
       .then(hits => {
         renderElements(hits, gallery);
-        console.log(hits);
+        const elemLink = document.querySelectorAll('a.lightbox-link');
+        const lightbox = new SimpleLightbox(elemLink, {
+          captionsData: 'alt',
+          captionDelay: 250,
+          animationSpeed: 250,
+          fadeSpeed: 250,
+          scrollZoom: false,
+        });
       })
       .catch(error => console.log(error));
   } else {
