@@ -78,6 +78,7 @@
 }
 .loader {
   position: relative;
+  left: 550px;
   width: 100px;
   height: 100px;
 }
